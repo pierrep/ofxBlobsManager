@@ -1,7 +1,7 @@
-#include "testApp.h"
+#include "ofApp.h"
 
 //--------------------------------------------------------------
-void testApp::setup(){
+void ofApp::setup(){
 
 	#ifdef _USE_LIVE_VIDEO
         vidGrabber.setVerbose(true);
@@ -21,32 +21,32 @@ void testApp::setup(){
 	
 	blobsManager.normalizePercentage = 0.7;
 	blobsManager.giveLowestPossibleIDs = true;
-	blobsManager.maxUndetectedTime = 500;
-	blobsManager.minDetectedTime = 2000;
-	blobsManager.debugDrawCandidates = true;
+    blobsManager.maxUndetectedTime = 1000;
+    blobsManager.minDetectedTime = 50;
+    blobsManager.debugDrawCandidates = false;
 	ofSetFrameRate(30);
 }
 
 //--------------------------------------------------------------
-void testApp::update(){
+void ofApp::update(){
 	ofBackground(100,100,100);
 
     bool bNewFrame = false;
 
 	#ifdef _USE_LIVE_VIDEO
-       vidGrabber.grabFrame();
+       vidGrabber.update();
 	   bNewFrame = vidGrabber.isFrameNew();
     #else
-        vidPlayer.idleMovie();
+        vidPlayer.update();
         bNewFrame = vidPlayer.isFrameNew();
 	#endif 
 
 	if (bNewFrame){
 
 		#ifdef _USE_LIVE_VIDEO
-            colorImg.setFromPixels(vidGrabber.getPixels(), 320,240);
+            colorImg.setFromPixels(vidGrabber.getPixels().getData(), 320,240);
 	    #else
-            colorImg.setFromPixels(vidPlayer.getPixels(), 320,240);
+            colorImg.setFromPixels(vidPlayer.getPixels().getData(), 320,240);
         #endif
 
         grayImage = colorImg;
@@ -69,7 +69,7 @@ void testApp::update(){
 }
 
 //--------------------------------------------------------------
-void testApp::draw(){
+void ofApp::draw(){
 
 	// draw the incoming, the grayscale, the bg and the thresholded difference
 	ofSetHexColor(0xffffff);
@@ -82,7 +82,7 @@ void testApp::draw(){
 
 	ofFill();
 	ofSetHexColor(0x333333);
-	ofRect(360,540,320,240);
+    ofDrawRectangle(360,540,320,240);
 	ofSetHexColor(0xffffff);
 
 	// we could draw the whole contour finder
@@ -95,15 +95,15 @@ void testApp::draw(){
     }
 
 	// debug draw the filtered blobs
-	blobsManager.debugDraw(20, 20, 320, 240, 320, 240);
-	blobsManager.debugDraw(360, 540, 320, 240, 320, 240);
+    blobsManager.debugDraw(20, 20, 320, 240, 320, 240);
+    blobsManager.debugDraw(360, 540, 320, 240, 320, 240);
 	
 	for(int i=0;i<blobsManager.blobs.size();i++)
 	{
 		ofxCvBlob blob = blobsManager.blobs.at(i);
 		ofNoFill();
 		ofSetColor(255,0,0);
-		ofCircle(20+blob.centroid.x,20+blob.centroid.y,40);
+        ofDrawCircle(20+blob.centroid.x,20+blob.centroid.y,40);
 	}
 	
 	ofEnableAlphaBlending();
@@ -113,7 +113,7 @@ void testApp::draw(){
 		ofxCvBlob candidateBlob = blobsManager.candidateBlobs.at(i);
 		ofNoFill();
 		ofSetColor(255,0,0,50);
-		ofCircle(20+candidateBlob.centroid.x,20+candidateBlob.centroid.y,40);
+        ofDrawCircle(20+candidateBlob.centroid.x,20+candidateBlob.centroid.y,40);
 	}
 	
 	ofDisableAlphaBlending();
@@ -129,7 +129,7 @@ void testApp::draw(){
 }
 
 //--------------------------------------------------------------
-void testApp::keyPressed(int key){
+void ofApp::keyPressed(int key){
 
 	switch (key){
 		case ' ':
@@ -147,41 +147,41 @@ void testApp::keyPressed(int key){
 }
 
 //--------------------------------------------------------------
-void testApp::keyReleased(int key){
+void ofApp::keyReleased(int key){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y ){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h){
 
 }
 
 //--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg){
 
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
 }

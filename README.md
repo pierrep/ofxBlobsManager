@@ -1,7 +1,6 @@
 BlobsManager
 ============
 
-*Looking for new maintainer*
 
 A manager for openCV blobs. 
 Functionalities: 
